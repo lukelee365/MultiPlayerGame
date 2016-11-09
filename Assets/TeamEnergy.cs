@@ -9,16 +9,33 @@ public class TeamEnergy : MonoBehaviour {
 	public float currentBlueTeamEnergy;
 	public Text redScore;
 	public Text blueScore;
-	// Use this for initialization
-	void Start () {
-	
+
+    [HideInInspector]
+    public GameObject redTeamWinUI;
+    [HideInInspector]
+    public GameObject blueTeamWinUI;
+    [HideInInspector]
+    public GameObject noWinAndLoseUI;
+
+    // Use this for initialization
+    void Start () {
+
+        redTeamWinUI = GameObject.Find("RedWinButton");
+        blueTeamWinUI = GameObject.Find("BlueWinButton");
+        noWinAndLoseUI = GameObject.Find("DrawButton");
+        redTeamWinUI.SetActive(false);
+        blueTeamWinUI.SetActive(false);
+        noWinAndLoseUI.SetActive(false);
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		redScore.text = ((int)currentRedTeamEnergy).ToString();
 		blueScore.text = ((int)currentBlueTeamEnergy).ToString();
-	}
+
+        ViewWinLoseConditions();
+    }
+
 	[PunRPC]
 	public void ModifyRedTeamEnergy(float amt){
 		// 0 - 100 just do wahtever
@@ -51,22 +68,61 @@ public class TeamEnergy : MonoBehaviour {
 			}
 		}
 	}
-		
 
-//	void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-//	{
-//		if (stream.isWriting)
-//		{
-//			//  send the others our data
-//
-//			stream.SendNext(currentRedTeamEnergy);
-//			stream.SendNext(currentBlueTeamEnergy);
-//		}
-//		else
-//		{
-//			// Network , receive data
-//			this.currentRedTeamEnergy = (float)stream.ReceiveNext();
-//			this.currentBlueTeamEnergy = (float)stream.ReceiveNext();
-//		}
-//	}
+    public void ViewWinLoseConditions()
+    {
+        if (currentRedTeamEnergy >= 150)
+        {
+            redTeamWinUI.SetActive(true);
+        }
+
+        if (currentBlueTeamEnergy > 150)
+        {
+            blueTeamWinUI.SetActive(true);
+        }
+    }
+
+    public void TimesUp()
+    {
+        if (currentRedTeamEnergy > currentBlueTeamEnergy)
+        {
+            redTeamWinUI.SetActive(true);
+        }
+
+        if (currentRedTeamEnergy < currentBlueTeamEnergy)
+        {
+            blueTeamWinUI.SetActive(true);
+        }
+
+        if (currentRedTeamEnergy == currentBlueTeamEnergy)
+        {
+            noWinAndLoseUI.SetActive(true);
+        }
+    }
+
+    public void ReLoadGame()
+    {
+        Application.LoadLevel("DemoRPGMovement-Scene");
+        redTeamWinUI.SetActive(false);
+        blueTeamWinUI.SetActive(false);
+        noWinAndLoseUI.SetActive(false);
+    }
+
+    //	void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    //	{
+    //		if (stream.isWriting)
+    //		{
+    //			//  send the others our data
+    //
+    //			stream.SendNext(currentRedTeamEnergy);
+    //			stream.SendNext(currentBlueTeamEnergy);
+    //		}
+    //		else
+    //		{
+    //			// Network , receive data
+    //			this.currentRedTeamEnergy = (float)stream.ReceiveNext();
+    //			this.currentBlueTeamEnergy = (float)stream.ReceiveNext();
+    //		}
+    //	}
+
 }
