@@ -7,9 +7,11 @@ public class RedGate : MonoBehaviour {
 	public bool isRedGate;
 	public float energyToBeAdded;
 	public Transform ballResapwnPoint;
+	private PhotonView tE_PhotonView;
 	// Use this for initialization
 	void Start () {
 		tEnergy = GameObject.FindGameObjectWithTag ("Manager").GetComponent<TeamEnergy> ();
+		tE_PhotonView = tEnergy.GetComponent<PhotonView> ();
 		something.SetActive (false);
 	}
 	
@@ -22,8 +24,10 @@ public class RedGate : MonoBehaviour {
 		if (tEnergy != null&&other.tag == "Ball") {
 			if (isRedGate) {//Score Red gate
 				tEnergy.ModifyBlueTeamEnergy (-energyToBeAdded);
+				//tE_PhotonView.RPC ("ModifyBlueTeamEnergy", PhotonTargets.All, -energyToBeAdded);
 			} else {//Score Blue Gate
 				tEnergy.ModifyRedTeamEnergy (-energyToBeAdded);
+				//tE_PhotonView.RPC ("ModifyRedTeamEnergy", PhotonTargets.All, -energyToBeAdded);
 			}
 			//set ball back to original postion
 			other.gameObject.transform.position = ballResapwnPoint.position;

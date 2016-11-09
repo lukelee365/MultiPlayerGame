@@ -32,7 +32,10 @@ public class BallMove : Photon.MonoBehaviour {
 			rigid.velocity = rigid.velocity.normalized * maxSpeed;
 		}
 	}
-
+	[PunRPC]
+	void AddVelocity(Vector3 vel){
+		rigid.AddForce(vel);
+	}
 	void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
 	{
 		if (stream.isWriting)

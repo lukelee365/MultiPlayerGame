@@ -10,7 +10,8 @@ public class RPGMovement : MonoBehaviour
     public float StrafeSpeed;
     public float RotateSpeed;
 	public float EnergyConsume;
-
+	public float EnergyRefillMutlifier;
+	public float PushAddSpeed;
 	//For Attack
 	public float attackRadius ;
 	public Transform attackTrans;
@@ -33,6 +34,8 @@ public class RPGMovement : MonoBehaviour
 	public float boundTreshHold;
     float m_CurrentTurnSpeed;
 	bool enableControll;
+	private GameObject ball;
+	private PhotonView ball_PV;
 
     void Start()
 	{
@@ -44,10 +47,13 @@ public class RPGMovement : MonoBehaviour
 		m_energy = GetComponent<Energy>();
 		t_Energy = GameObject.FindGameObjectWithTag ("Manager").GetComponent<TeamEnergy> ();
 		tE_PhotonView = GameObject.FindGameObjectWithTag ("Manager").GetComponent<PhotonView> ();
+	
 		enableControll = true;
 		if (PhotonNetwork.isMasterClient) {
 			EnergyConsume = EnergyConsume/2.0f;
 		}
+		ball = GameObject.FindGameObjectWithTag ("Ball");
+		ball_PV = GameObject.FindGameObjectWithTag("Ball").GetComponent<PhotonView> ();
 	}
 
     void Update()
@@ -85,8 +91,8 @@ public class RPGMovement : MonoBehaviour
         if( Mathf.Abs( speed ) < 0.2f )
         {
             speed = 0f;
-			//Stand Still
-			m_energy.TakenEnergy(-EnergyConsume);
+			//Stand Still Refill Energy
+			m_energy.TakenEnergy(-EnergyConsume*EnergyRefillMutlifier);
 		    //m_PhotonView.RPC("TakenEnergy",PhotonTargets.All,-EnergyConsume);
         }
 
@@ -233,6 +239,10 @@ public class RPGMovement : MonoBehaviour
 					pv = hit.gameObject.transform.parent.GetComponent<PhotonView> ();
 					pre_Connected = hit.gameObject;
 
+				} else if (hit.tag == "Ball") {
+					Vector3 tempVel = transform.forward * PushAddSpeed;
+					ball_PV.RPC ("AddVelocity", PhotonTargets.All, tempVel);
+					m_energy.TakenEnergy (EnergyConsume*energySuckSpeed);
 				}
 			}
 			float tempDist =1000f;
@@ -247,7 +257,7 @@ public class RPGMovement : MonoBehaviour
 						// both of the the teammemeber have enough energy to trade
 						if (2 <= hitEnergy.currentEnergy && hitEnergy.currentEnergy <= hitEnergy.energyValue && 2 <= m_energy.currentEnergy && m_energy.currentEnergy <= m_energy.energyValue) {
 							m_energy.TakenEnergy (-EnergyConsume * energySuckSpeed);
-							pv.RPC ("TakenEnergy", PhotonTargets.All, EnergyConsume * energySuckSpeed);
+							pv.RPC ("TakenEnergy", PhotonTargets.All, EnergyConsume*8f* energySuckSpeed);
 						}
 					} else {
 						// if target is in different team and this player is in Red team

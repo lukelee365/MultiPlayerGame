@@ -108,21 +108,21 @@ public class TeamEnergy : MonoBehaviour {
         noWinAndLoseUI.SetActive(false);
     }
 
-    //	void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    //	{
-    //		if (stream.isWriting)
-    //		{
-    //			//  send the others our data
-    //
-    //			stream.SendNext(currentRedTeamEnergy);
-    //			stream.SendNext(currentBlueTeamEnergy);
-    //		}
-    //		else
-    //		{
-    //			// Network , receive data
-    //			this.currentRedTeamEnergy = (float)stream.ReceiveNext();
-    //			this.currentBlueTeamEnergy = (float)stream.ReceiveNext();
-    //		}
-    //	}
+    	void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    	{
+    		if (stream.isWriting)
+    		{
+    			//  send the others our data
+    
+    			stream.SendNext(currentRedTeamEnergy);
+    			stream.SendNext(currentBlueTeamEnergy);
+    		}
+    		else
+    		{
+    			// Network , receive data
+    			this.currentRedTeamEnergy = (float)stream.ReceiveNext();
+    			this.currentBlueTeamEnergy = (float)stream.ReceiveNext();
+    		}
+    	}
 
 }
