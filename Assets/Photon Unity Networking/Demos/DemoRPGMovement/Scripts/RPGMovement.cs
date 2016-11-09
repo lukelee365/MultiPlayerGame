@@ -2,7 +2,7 @@
 using System.Collections;
 
 [RequireComponent( typeof( CharacterController ) )]
-public class RPGMovement : MonoBehaviour
+public class RPGMovement : Photon.PunBehaviour, IPunObservable
 {
     public float ForwardSpeed;
     public float BackwardSpeed;
@@ -36,6 +36,8 @@ public class RPGMovement : MonoBehaviour
 	bool enableControll;
 	private GameObject ball;
 	private PhotonView ball_PV;
+	[Tooltip("The Player's UI GameObject Prefab")]
+	public GameObject PlayerUiPrefab;
 
     void Start()
 	{
@@ -54,6 +56,15 @@ public class RPGMovement : MonoBehaviour
 		}
 		ball = GameObject.FindGameObjectWithTag ("Ball");
 		ball_PV = GameObject.FindGameObjectWithTag("Ball").GetComponent<PhotonView> ();
+		if (this.PlayerUiPrefab != null)
+		{
+			GameObject _uiGo = Instantiate(this.PlayerUiPrefab) as GameObject;
+			_uiGo.SendMessage("SetTarget", this, SendMessageOptions.RequireReceiver);
+		}
+		else
+		{
+			Debug.LogWarning("<Color=Red><b>Missing</b></Color> PlayerUiPrefab reference on player Prefab.", this);
+		}
 	}
 
     void Update()
@@ -323,6 +334,13 @@ public class RPGMovement : MonoBehaviour
 	public void EnableControl(bool b){
 		enableControll = b;
 	}
+	#region IPunObservable implementation
 
+	public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+	{
+		
+	}
+
+	#endregion
 		
 }
