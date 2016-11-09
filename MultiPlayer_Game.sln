@@ -1,0 +1,35 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2008
+
+Project("{D3069B65-DEEF-B9C4-6821-FCCE9D488E62}") = "MultiPlayer_Game", "Assembly-CSharp-firstpass.csproj", "{76EC1572-ECD5-DBA9-67BB-FE06C710A41E}"
+EndProject
+Project("{D3069B65-DEEF-B9C4-6821-FCCE9D488E62}") = "MultiPlayer_Game", "Assembly-CSharp.csproj", "{95E42338-F780-5D41-FF95-FEA14798AB78}"
+EndProject
+Project("{D3069B65-DEEF-B9C4-6821-FCCE9D488E62}") = "MultiPlayer_Game", "Assembly-CSharp-Editor.csproj", "{6A2EE52D-2F71-191D-535A-678916B72B76}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{76EC1572-ECD5-DBA9-67BB-FE06C710A41E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76EC1572-ECD5-DBA9-67BB-FE06C710A41E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76EC1572-ECD5-DBA9-67BB-FE06C710A41E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76EC1572-ECD5-DBA9-67BB-FE06C710A41E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95E42338-F780-5D41-FF95-FEA14798AB78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95E42338-F780-5D41-FF95-FEA14798AB78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95E42338-F780-5D41-FF95-FEA14798AB78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95E42338-F780-5D41-FF95-FEA14798AB78}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A2EE52D-2F71-191D-535A-678916B72B76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A2EE52D-2F71-191D-535A-678916B72B76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A2EE52D-2F71-191D-535A-678916B72B76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A2EE52D-2F71-191D-535A-678916B72B76}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Assembly-CSharp.csproj
+	EndGlobalSection
+EndGlobal
