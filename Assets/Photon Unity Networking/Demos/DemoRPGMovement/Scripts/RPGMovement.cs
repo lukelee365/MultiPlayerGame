@@ -2,7 +2,7 @@
 using System.Collections;
 
 [RequireComponent( typeof( CharacterController ) )]
-public class RPGMovement : Photon.PunBehaviour, IPunObservable
+public class RPGMovement : MonoBehaviour
 {
     public float ForwardSpeed;
     public float BackwardSpeed;
@@ -36,9 +36,7 @@ public class RPGMovement : Photon.PunBehaviour, IPunObservable
 	bool enableControll;
 	private GameObject ball;
 	private PhotonView ball_PV;
-	[Tooltip("The Player's UI GameObject Prefab")]
-	public GameObject PlayerUiPrefab;
-
+	public bool anotherMovementControlForButton;
     void Start()
 	{
 		
@@ -49,22 +47,13 @@ public class RPGMovement : Photon.PunBehaviour, IPunObservable
 		m_energy = GetComponent<Energy>();
 		t_Energy = GameObject.FindGameObjectWithTag ("Manager").GetComponent<TeamEnergy> ();
 		tE_PhotonView = GameObject.FindGameObjectWithTag ("Manager").GetComponent<PhotonView> ();
-	
+		anotherMovementControlForButton = false;
 		enableControll = true;
 		if (PhotonNetwork.isMasterClient) {
 			EnergyConsume = EnergyConsume/2.0f;
 		}
 		ball = GameObject.FindGameObjectWithTag ("Ball");
 		ball_PV = GameObject.FindGameObjectWithTag("Ball").GetComponent<PhotonView> ();
-		if (this.PlayerUiPrefab != null)
-		{
-			GameObject _uiGo = Instantiate(this.PlayerUiPrefab) as GameObject;
-			_uiGo.SendMessage("SetTarget", this, SendMessageOptions.RequireReceiver);
-		}
-		else
-		{
-			Debug.LogWarning("<Color=Red><b>Missing</b></Color> PlayerUiPrefab reference on player Prefab.", this);
-		}
 	}
 
     void Update()
@@ -74,7 +63,7 @@ public class RPGMovement : Photon.PunBehaviour, IPunObservable
         if( m_PhotonView.isMine == true )
         {
             ResetSpeedValues();
-			if (enableControll) {
+			if (enableControll&&anotherMovementControlForButton) {
 				UpdateRotateMovement ();
 				UpdateForwardMovement ();
 				UpdateBackwardMovement ();
@@ -334,13 +323,6 @@ public class RPGMovement : Photon.PunBehaviour, IPunObservable
 	public void EnableControl(bool b){
 		enableControll = b;
 	}
-	#region IPunObservable implementation
 
-	public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-	{
-		
-	}
-
-	#endregion
 		
 }

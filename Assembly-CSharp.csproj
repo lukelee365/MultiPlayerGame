@@ -6,7 +6,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{2E47264E-639D-FE62-F736-19D338520214}</ProjectGuid>
+    <ProjectGuid>{13A26016-82FE-96FC-4A39-FE82C014B442}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -45,6 +45,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\DisablePlayerMovement.cs" />
      <Compile Include="Assets\Photon Unity Networking\Demos\Demo2DJumpAndRunWithPhysics\Scripts\Demo2DJumpAndRun.cs" />
      <Compile Include="Assets\Photon Unity Networking\Demos\Demo2DJumpAndRunWithPhysics\Scripts\JumpAndRunMovement.cs" />
      <Compile Include="Assets\Photon Unity Networking\Demos\DemoBoxes\ColorPerPlayer.cs" />
@@ -189,7 +190,6 @@
      <Compile Include="Assets\PhotonChatApi\ChatState.cs" />
      <Compile Include="Assets\PhotonChatApi\ChatUserStatus.cs" />
      <Compile Include="Assets\PhotonChatApi\IChatClientListener.cs" />
-     <Compile Include="Assets\PlayerUI2.cs" />
      <Compile Include="Assets\RedGate.cs" />
      <Compile Include="Assets\TeamEnergy.cs" />
      <Compile Include="Assets\Timer.cs" />
@@ -212,15 +212,15 @@
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>
  </Reference>
  <Reference Include="Photon3Unity3D">
- <HintPath>/Users/li_lu/Documents/Unity Project/MultiPlayerGame/Assets/Plugins/Photon3Unity3D.dll</HintPath>
+ <HintPath>/Users/li_lu/Documents/Unity Project/MultiPlayerGame_WithoutNaming/Assets/Plugins/Photon3Unity3D.dll</HintPath>
  </Reference>
  <Reference Include="websocket-sharp">
- <HintPath>/Users/li_lu/Documents/Unity Project/MultiPlayerGame/Assets/Plugins/WebSocket/websocket-sharp.dll</HintPath>
+ <HintPath>/Users/li_lu/Documents/Unity Project/MultiPlayerGame_WithoutNaming/Assets/Plugins/WebSocket/websocket-sharp.dll</HintPath>
  </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
-      <Project>{92073F6F-442E-278C-628D-6F4779E2A55B}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
+      <Project>{CA944C3B-285D-5D54-A00A-BFB39C719F09}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Photon Unity Networking/Demos/PunBasics-Tutorial/Scenes/PunBasics-Launcher.unity
+- path: Assets/Photon Unity Networking/Demos/DemoRPGMovement/DemoRPGMovement-Scene.unity
   isLoaded: 1
   isActive: 1

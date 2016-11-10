@@ -8,16 +8,29 @@ public class Energy : Photon.MonoBehaviour {
 	float backPackScaleY;
 	private RPGMovement moveScript;
 	public bool isRedTeam;
+	public TextMesh textMesh_PlayerName;
+	private bool redColor;
+	private string playerName;
 	// Use this for initialization
 	void Start () {
 		currentEnergy = energyValue;
 		backPackScaleY = backPack.localScale.y;
 		moveScript = GetComponent<RPGMovement> ();
+	
 
 	}
 	
 	// Update is called once per frame
 	void Update(){
+//		if(playerName==null){
+			playerName = this.photonView.owner.name;
+			textMesh_PlayerName.text = playerName;
+			if (isRedTeam) {				
+				textMesh_PlayerName.color = Color.red;
+			} else {			
+				textMesh_PlayerName.color = Color.blue;
+			}
+//		}
 		backPack.localScale = new Vector3 (backPack.localScale.x, backPackScaleY * currentEnergy / energyValue, backPack.localScale.z);
 	}
 
@@ -56,13 +69,15 @@ public class Energy : Photon.MonoBehaviour {
 		{
 			// We own this player: send the others our data
 			stream.SendNext(currentEnergy);
-
+			stream.SendNext(playerName);
+			stream.SendNext(isRedTeam);
 		}
 		else
 		{
 			// Network player, receive data
 			this.currentEnergy = (float)stream.ReceiveNext();
-
+			this.playerName =(string)stream.ReceiveNext();
+			this.isRedTeam = (bool)stream.ReceiveNext();
 		}
 	}
 }

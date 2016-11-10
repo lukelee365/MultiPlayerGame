@@ -27,7 +27,7 @@ public class PunTeams : MonoBehaviour
 
     #region Events by Unity and Photon
 
-    public void Awake()
+    public void Start()
     {
         PlayersPerTeam = new Dictionary<Team, List<PhotonPlayer>>();
         Array enumVals = Enum.GetValues(typeof (Team));

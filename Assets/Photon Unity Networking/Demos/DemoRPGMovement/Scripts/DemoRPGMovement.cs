@@ -9,27 +9,18 @@ public class DemoRPGMovement : MonoBehaviour
 	public Transform spawnPositionBlue;
 	public Transform spawnPositionBall;
 	public float PositionOffset = 2.0f;
+	public GameObject inputButton;
+    void OnJoinedRoom()
+    {
+		//Instantiate The Ball to Push
+		Vector3 ballposition = spawnPositionBall.position;
 
-	void Start(){
-				//Instantiate The Ball to Push
-				Vector3 ballposition = spawnPositionBall.position;
-		
-				if (PhotonNetwork.isMasterClient)  {
-					GameObject Ball = PhotonNetwork.Instantiate( "Ball", ballposition, Quaternion.identity, 0 );
-				}
-				AssignedTeams ();
-	}
-//    void OnJoinedRoom()
-//    {
-//		//Instantiate The Ball to Push
-//		Vector3 ballposition = spawnPositionBall.position;
-//
-//		if (PhotonNetwork.isMasterClient)  {
-//			GameObject Ball = PhotonNetwork.Instantiate( "Ball", ballposition, Quaternion.identity, 0 );
-//		}
-//		AssignedTeams ();
-//    }
-//
+		if (PhotonNetwork.isMasterClient)  {
+			GameObject Ball = PhotonNetwork.Instantiate( "Ball", ballposition, Quaternion.identity, 0 );
+		}
+		AssignedTeams ();
+    }
+
 	void CreatePlayerObject(Transform spawnPosition,bool isRed)
     {
 		Vector3 spawnPos = Vector3.up;
@@ -44,6 +35,7 @@ public class DemoRPGMovement : MonoBehaviour
 		GameObject newPlayerObject = PhotonNetwork.Instantiate( "Robot Kyle RPG", spawnPos, Quaternion.identity, 0 );
         Camera.Target = newPlayerObject.transform;
 		newPlayerObject.SendMessage ("IsInRedTeam",isRed);
+		inputButton.SendMessage ("PassPlayer",newPlayerObject);
 
     }
 

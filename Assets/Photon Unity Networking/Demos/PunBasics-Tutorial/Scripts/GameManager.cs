@@ -162,8 +162,6 @@ namespace ExitGames.Demos.DemoAnimator
 			Debug.Log( "PhotonNetwork : Loading Level : " + PhotonNetwork.room.playerCount ); 
 
 			PhotonNetwork.LoadLevel("PunBasics-Room for "+PhotonNetwork.room.playerCount);
-			//Hacked
-			//PhotonNetwork.LoadLevel("DemoRPGMovement-Scene");
 		}
 
 		#endregion

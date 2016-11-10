@@ -228,7 +228,7 @@ namespace ExitGames.Demos.DemoAnimator
 
 				// #Critical
 				// Load the Room Level. 
-				PhotonNetwork.LoadLevel("DemoRPGMovement-Scene");
+				PhotonNetwork.LoadLevel("PunBasics-Room for 1");
 
 			}
 		}
