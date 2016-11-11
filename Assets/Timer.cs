@@ -25,6 +25,7 @@ public class Timer : MonoBehaviour
 
     void Awake()
     {
+
         startTime = Time.time;
     }
 
@@ -32,20 +33,26 @@ public class Timer : MonoBehaviour
     {
 
 
-        guiTime = Time.time - startTime;
+            guiTime = Time.time - startTime;
 
-        restSeconds = (int)(countDownSeconds - (guiTime));
+            restSeconds = (int)(countDownSeconds - (guiTime));
 
-        //display the timer
-        roundedRestSeconds = Mathf.CeilToInt(restSeconds);
-        displaySeconds = roundedRestSeconds % 60;
-        displayMinutes = roundedRestSeconds / 60;
 
-        text = string.Format("{0:00}:{1:00}", displayMinutes, displaySeconds);
+            //display the timer
+            roundedRestSeconds = Mathf.CeilToInt(restSeconds);
+            displaySeconds = roundedRestSeconds % 60;
+            displayMinutes = roundedRestSeconds / 60;
+
+        if (displaySeconds >= 0 || displayMinutes > 0)
+        {
+            text = string.Format("{0:00}:{1:00}", displayMinutes, displaySeconds);
+        }
 
         if (displaySeconds < 0)
         {
-            teamEnergy.TimesUp();
+                teamEnergy.TimesUp();
+                displaySeconds = 0;
+                text = string.Format("{0:00}:{1:00}", 0, 0);
         }
 
     }

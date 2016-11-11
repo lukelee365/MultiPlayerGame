@@ -10,6 +10,7 @@ public class DemoRPGMovement : MonoBehaviour
 	public Transform spawnPositionBall;
 	public float PositionOffset = 2.0f;
 	public GameObject inputButton;
+    public GameObject control;
     void OnJoinedRoom()
     {
 		//Instantiate The Ball to Push
@@ -36,6 +37,8 @@ public class DemoRPGMovement : MonoBehaviour
         Camera.Target = newPlayerObject.transform;
 		newPlayerObject.SendMessage ("IsInRedTeam",isRed);
 		inputButton.SendMessage ("PassPlayer",newPlayerObject);
+        control.SendMessage("PassPlayer2", newPlayerObject);
+
 
     }
 

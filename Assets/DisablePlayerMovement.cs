@@ -20,7 +20,10 @@ public class DisablePlayerMovement : MonoBehaviour {
 		playerRPG = o.GetComponent<RPGMovement> ();
 
 	}
-	public void PlayerCanMoveNow(){
+
+  
+
+    public void PlayerCanMoveNow(){
 		//enable the movement
 		playerRPG.anotherMovementControlForButton = true;
 	}

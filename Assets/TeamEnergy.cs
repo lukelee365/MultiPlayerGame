@@ -15,18 +15,32 @@ public class TeamEnergy : MonoBehaviour {
     [HideInInspector]
     public GameObject blueTeamWinUI;
     [HideInInspector]
+    public GameObject redTeamLoseUI;
+    [HideInInspector]
+    public GameObject blueTeamLoseUI;
+    [HideInInspector]
     public GameObject noWinAndLoseUI;
+
+    private Energy energy;
+    private GameObject player;
 
     // Use this for initialization
     void Start () {
 
         redTeamWinUI = GameObject.Find("RedWinButton");
         blueTeamWinUI = GameObject.Find("BlueWinButton");
+        redTeamLoseUI = GameObject.Find("RedLoseButton");
+        blueTeamLoseUI = GameObject.Find("BlueLoseButton");
         noWinAndLoseUI = GameObject.Find("DrawButton");
         redTeamWinUI.SetActive(false);
         blueTeamWinUI.SetActive(false);
+        redTeamLoseUI.SetActive(false);
+        blueTeamLoseUI.SetActive(false);
         noWinAndLoseUI.SetActive(false);
-	}
+
+        print("Player" + player);
+        energy = player.GetComponent<Energy>();
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -71,15 +85,33 @@ public class TeamEnergy : MonoBehaviour {
 
     public void ViewWinLoseConditions()
     {
-        if (currentRedTeamEnergy >= 150)
-        {
-            redTeamWinUI.SetActive(true);
-        }
 
-        if (currentBlueTeamEnergy > 150)
-        {
-            blueTeamWinUI.SetActive(true);
-        }
+            if (energy.isRedTeam == true)
+            {
+                if (currentRedTeamEnergy >= 150)
+                {
+                    redTeamWinUI.SetActive(true);
+                }
+
+                if (currentBlueTeamEnergy >= 150)
+                {
+                    redTeamLoseUI.SetActive(true);
+                }
+            }
+
+            if (energy.isRedTeam == false)
+            {
+                if (currentRedTeamEnergy >= 150)
+                {
+                    blueTeamLoseUI.SetActive(true);
+                }
+
+                if (currentBlueTeamEnergy >= 150)
+                {
+                    blueTeamWinUI.SetActive(true);
+                }
+            }
+
     }
 
     public void TimesUp()
@@ -99,7 +131,12 @@ public class TeamEnergy : MonoBehaviour {
             noWinAndLoseUI.SetActive(true);
         }
     }
+    public void PassPlayer2(GameObject o)
+    {
 
+        player = o;
+
+    }
     public void ReLoadGame()
     {
         Application.LoadLevel("DemoRPGMovement-Scene");
