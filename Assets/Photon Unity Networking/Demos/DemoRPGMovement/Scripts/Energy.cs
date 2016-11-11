@@ -37,7 +37,7 @@ public class Energy : Photon.MonoBehaviour {
 	[PunRPC]
 	public void TakenEnergy(float amt){
 		
-		// 0 - 100 just do wahtever
+		// 0 - 100 just do whatever
 		if (currentEnergy > 1f && currentEnergy <= energyValue) {
 			currentEnergy -= amt;
 			moveScript.EnableControl(true); 

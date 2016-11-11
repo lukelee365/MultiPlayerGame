@@ -39,7 +39,7 @@ public class TeamEnergy : MonoBehaviour {
         noWinAndLoseUI.SetActive(false);
 
         print("Player" + player);
-        energy = player.GetComponent<Energy>();
+        //energy = player.GetComponent<Energy>();
     }
 	
 	// Update is called once per frame
@@ -86,8 +86,8 @@ public class TeamEnergy : MonoBehaviour {
     public void ViewWinLoseConditions()
     {
 
-            if (energy.isRedTeam == true)
-            {
+            //if (energy.isRedTeam == true)
+            //{
                 if (currentRedTeamEnergy >= 150)
                 {
                     redTeamWinUI.SetActive(true);
@@ -97,9 +97,9 @@ public class TeamEnergy : MonoBehaviour {
                 {
                     redTeamLoseUI.SetActive(true);
                 }
-            }
+            //}
 
-            if (energy.isRedTeam == false)
+            /*if (energy.isRedTeam == false)
             {
                 if (currentRedTeamEnergy >= 150)
                 {
@@ -110,7 +110,7 @@ public class TeamEnergy : MonoBehaviour {
                 {
                     blueTeamWinUI.SetActive(true);
                 }
-            }
+            } */
 
     }
 

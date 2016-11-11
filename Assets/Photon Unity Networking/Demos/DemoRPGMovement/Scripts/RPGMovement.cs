@@ -67,8 +67,9 @@ public class RPGMovement : MonoBehaviour
 				UpdateRotateMovement ();
 				UpdateForwardMovement ();
 				UpdateBackwardMovement ();
-				UpdateStrafeMovement ();
-				Attack ();
+                UpdateStrafeMovement ();
+
+                Attack();
 			}
             MoveCharacterController();
             ApplyGravityToCharacterController();
@@ -87,8 +88,9 @@ public class RPGMovement : MonoBehaviour
 
         float speed = Vector3.Dot( movementVector.normalized, transform.forward );
         float direction = Vector3.Dot( movementVector.normalized, transform.right );
+        float speed2 = Vector3.Dot(movementVector.normalized, transform.right);
 
-        if( Mathf.Abs( speed ) < 0.2f )
+        if ( Mathf.Abs( speed ) < 0.2f && Mathf.Abs(speed2) < 0.2f)
         {
             speed = 0f;
 			//Stand Still Refill Energy
@@ -182,7 +184,8 @@ public class RPGMovement : MonoBehaviour
 				m_energy.TakenEnergy(EnergyConsume);
 				//m_PhotonView.RPC ("TakenEnergy",PhotonTargets.All,EnergyConsume);
 				m_CurrentMovement =  -transform.forward * BackwardSpeed;
-			}
+                print("Energy2:" + EnergyConsume);
+            }
         }
     }
 
@@ -190,10 +193,12 @@ public class RPGMovement : MonoBehaviour
     {
 		if( Input.GetKey( KeyCode.A ) == true|| Input.GetAxisRaw("Horizontal") < -0.1f )
 		{
-			CancelInvoke();
 
-			m_energy.TakenEnergy(EnergyConsume);
-			//m_PhotonView.RPC ("TakenEnergy",PhotonTargets.All,EnergyConsume);
+            CancelInvoke();
+
+            m_energy.TakenEnergy(EnergyConsume);
+            print("Energy1:" + m_energy);
+            //m_PhotonView.RPC ("TakenEnergy",PhotonTargets.All,EnergyConsume);
             m_CurrentMovement = -transform.right * StrafeSpeed;
         }
 
