@@ -7,8 +7,8 @@ public class TeamEnergy : MonoBehaviour {
 	public float blueTeamEnergyValue;
 	public float currentRedTeamEnergy;
 	public float currentBlueTeamEnergy;
-	public Text redScore;
-	public Text blueScore;
+	public GameObject redScore;
+	public GameObject blueScore;
 
     [HideInInspector]
     public GameObject redTeamWinUI;
@@ -23,7 +23,8 @@ public class TeamEnergy : MonoBehaviour {
 
     private Energy energy;
     private GameObject player;
-
+	private float redScaleY;
+	private float blueScaleY;
     // Use this for initialization
     void Start () {
 
@@ -37,16 +38,16 @@ public class TeamEnergy : MonoBehaviour {
         redTeamLoseUI.SetActive(false);
         blueTeamLoseUI.SetActive(false);
         noWinAndLoseUI.SetActive(false);
-
+		redScaleY = redScore.transform.localScale.y;
+		blueScaleY = blueScore.transform.localScale.y;
         print("Player" + player);
         //energy = player.GetComponent<Energy>();
     }
 	
 	// Update is called once per frame
 	void Update () {
-		redScore.text = ((int)currentRedTeamEnergy).ToString();
-		blueScore.text = ((int)currentBlueTeamEnergy).ToString();
-
+		redScore.transform.localScale = new Vector3 (redScore.transform.localScale.x, redScaleY * currentRedTeamEnergy / redTeamEnergyValue, redScore.transform.localScale.z);
+		blueScore.transform.localScale = new Vector3 (blueScore.transform.localScale.x, blueScaleY * currentBlueTeamEnergy / blueTeamEnergyValue, blueScore.transform.localScale.z);
         ViewWinLoseConditions();
     }
 

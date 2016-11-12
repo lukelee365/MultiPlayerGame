@@ -1,15 +1,19 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Photon Unity Networking/Demos/PunBasics-Tutorial/Scripts/GameManager.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/TeamEnergy.cs">
     <Files>
-      <File FileName="Assets/RedGate.cs" Line="1" Column="1" />
-      <File FileName="Assets/Timer.cs" Line="1" Column="1" />
-      <File FileName="Assets/Photon Unity Networking/Demos/PunBasics-Tutorial/Scripts/Launcher.cs" Line="231" Column="29" />
-      <File FileName="Assets/Photon Unity Networking/UtilityScripts/ConnectAndJoinRandom.cs" Line="15" Column="2" />
-      <File FileName="Assets/Photon Unity Networking/Demos/PunBasics-Tutorial/Scripts/GameManager.cs" Line="63" Column="5" />
-      <File FileName="Assets/Photon Unity Networking/Demos/DemoRPGMovement/Scripts/DemoRPGMovement.cs" Line="13" Column="24" />
-      <File FileName="Assets/Photon Unity Networking/Demos/PunBasics-Tutorial/Scripts/PlayerManager.cs" Line="140" Column="3" />
-      <File FileName="Assets/Photon Unity Networking/Demos/PunBasics-Tutorial/Scripts/PlayerUI.cs" Line="136" Column="19" />
+      <File FileName="Assets/Photon Unity Networking/Demos/DemoRPGMovement/Scripts/RPGMovement.cs" Line="81" Column="13" />
+      <File FileName="Assets/Photon Unity Networking/Demos/DemoRPGMovement/Scripts/Energy.cs" Line="19" Column="3" />
+      <File FileName="Assets/Timer.cs" Line="70" Column="39" />
+      <File FileName="Assets/Photon Unity Networking/Demos/PunBasics-Tutorial/Scripts/Launcher.cs" Line="1" Column="1" />
+      <File FileName="Assets/Photon Unity Networking/UtilityScripts/ConnectAndJoinRandom.cs" Line="1" Column="1" />
+      <File FileName="Assets/Photon Unity Networking/Demos/PunBasics-Tutorial/Scripts/GameManager.cs" Line="1" Column="1" />
+      <File FileName="Assets/Photon Unity Networking/Demos/DemoRPGMovement/Scripts/DemoRPGMovement.cs" Line="13" Column="1" />
+      <File FileName="Assets/Photon Unity Networking/Demos/PunBasics-Tutorial/Scripts/PlayerManager.cs" Line="1" Column="1" />
+      <File FileName="Assets/Photon Unity Networking/Demos/PunBasics-Tutorial/Scripts/PlayerUI.cs" Line="1" Column="1" />
+      <File FileName="Assets/Photon Unity Networking/UtilityScripts/ShowStatusWhenConnecting.cs" Line="21" Column="25" />
+      <File FileName="Assets/DisablePlayerMovement.cs" Line="28" Column="1" />
+      <File FileName="Assets/TeamEnergy.cs" Line="49" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

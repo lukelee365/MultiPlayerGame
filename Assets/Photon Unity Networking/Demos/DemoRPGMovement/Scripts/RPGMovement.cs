@@ -12,12 +12,17 @@ public class RPGMovement : MonoBehaviour
 	public float EnergyConsume;
 	public float EnergyRefillMutlifier;
 	public float PushAddSpeed;
+	public float stealRationForTeam;
 	//For Attack
 	public float attackRadius ;
 	public Transform attackTrans;
 	//public float attackPower ;
 	//public float attackUpModifer;
-	public float energySuckSpeed;
+	public float energySuckValue;
+	public float energyStealTimer;
+	private float energyConsumeOnPushing= 8f;
+	[HideInInspector]
+	public bool anotherMovementControlForButton;
 	private Energy m_energy;
 	private TeamEnergy t_Energy;
 	private Energy hitEnergy;
@@ -36,7 +41,9 @@ public class RPGMovement : MonoBehaviour
 	bool enableControll;
 	private GameObject ball;
 	private PhotonView ball_PV;
-	public bool anotherMovementControlForButton;
+	private float timeToSteal;
+
+
     void Start()
 	{
 		
@@ -50,7 +57,7 @@ public class RPGMovement : MonoBehaviour
 		anotherMovementControlForButton = false;
 		enableControll = true;
 		if (PhotonNetwork.isMasterClient) {
-			EnergyConsume = EnergyConsume/2.0f;
+			EnergyConsume = EnergyConsume/3.0f;
 		}
 		ball = GameObject.FindGameObjectWithTag ("Ball");
 		ball_PV = GameObject.FindGameObjectWithTag("Ball").GetComponent<PhotonView> ();
@@ -69,8 +76,9 @@ public class RPGMovement : MonoBehaviour
 				UpdateBackwardMovement ();
                 UpdateStrafeMovement ();
 
-                Attack();
 			}
+
+			Attack();
             MoveCharacterController();
             ApplyGravityToCharacterController();
 
@@ -88,16 +96,24 @@ public class RPGMovement : MonoBehaviour
 
         float speed = Vector3.Dot( movementVector.normalized, transform.forward );
         float direction = Vector3.Dot( movementVector.normalized, transform.right );
-        float speed2 = Vector3.Dot(movementVector.normalized, transform.right);
+        //float speed2 = Vector3.Dot(movementVector.normalized, transform.right);
 
-        if ( Mathf.Abs( speed ) < 0.2f && Mathf.Abs(speed2) < 0.2f)
-        {
-            speed = 0f;
+//        if ( Mathf.Abs( speed ) < 0f && Mathf.Abs(speed2) < 0f)
+//        {
+//            speed = 0f;
+//			//Stand Still Refill Energy
+//			m_energy.TakenEnergy(-EnergyConsume*EnergyRefillMutlifier);
+//		    //m_PhotonView.RPC("TakenEnergy",PhotonTargets.All,-EnergyConsume);
+//        }
+//
+		if( Mathf.Abs( speed ) <0.1f)
+		{
+			speed = 0f;
 			//Stand Still Refill Energy
 			m_energy.TakenEnergy(-EnergyConsume*EnergyRefillMutlifier);
-		    //m_PhotonView.RPC("TakenEnergy",PhotonTargets.All,-EnergyConsume);
-        }
-
+//			Debug.Log ("RefillEnergy");
+			//m_PhotonView.RPC("TakenEnergy",PhotonTargets.All,-EnergyConsume);
+		}
         if( speed > 0.6f )
         {
             speed = 1f;
@@ -184,7 +200,7 @@ public class RPGMovement : MonoBehaviour
 				m_energy.TakenEnergy(EnergyConsume);
 				//m_PhotonView.RPC ("TakenEnergy",PhotonTargets.All,EnergyConsume);
 				m_CurrentMovement =  -transform.forward * BackwardSpeed;
-                print("Energy2:" + EnergyConsume);
+               // print("Energy2:" + EnergyConsume);
             }
         }
     }
@@ -196,8 +212,8 @@ public class RPGMovement : MonoBehaviour
 
             CancelInvoke();
 
-            m_energy.TakenEnergy(EnergyConsume);
-            print("Energy1:" + m_energy);
+			m_energy.TakenEnergy(EnergyConsume+EnergyConsume*EnergyRefillMutlifier);
+           // print("Energy1:" + m_energy);
             //m_PhotonView.RPC ("TakenEnergy",PhotonTargets.All,EnergyConsume);
             m_CurrentMovement = -transform.right * StrafeSpeed;
         }
@@ -206,7 +222,7 @@ public class RPGMovement : MonoBehaviour
 		{
 			CancelInvoke();
 
-			m_energy.TakenEnergy(EnergyConsume);
+			m_energy.TakenEnergy(EnergyConsume+EnergyConsume*EnergyRefillMutlifier);
 			//m_PhotonView.RPC ("TakenEnergy",PhotonTargets.All,EnergyConsume);
             m_CurrentMovement = transform.right * StrafeSpeed;
         }
@@ -234,94 +250,124 @@ public class RPGMovement : MonoBehaviour
 	//  Suck Gun Attack
 	//Suck Energy is 3 times faster of Energy Consume 
 	void Attack(){
-		
 		if (Input.GetButton ("Fire1")) {
 			//Vector3 explosionPos = transform.position+Vector3.forward*forwardOffset;
 			Collider[] colliders = Physics.OverlapSphere (attackTrans.position, attackRadius);
 			foreach (Collider hit in colliders) {
 				if (hit.tag == "BackPack") {// hit the backPack 
-					hitEnergy = hit.gameObject.transform.parent.GetComponent<Energy> ();
-					pv = hit.gameObject.transform.parent.GetComponent<PhotonView> ();
-					pre_Connected = hit.gameObject;
+					hitEnergy = hit.gameObject.transform.parent.parent.GetComponent<Energy> ();
+					pv = hit.gameObject.transform.parent.parent.GetComponent<PhotonView> ();
+
+						if (Time.time >= timeToSteal) {
+							//can attack now
+							timeToSteal = Time.time + energyStealTimer;
+						Debug.Log ("attack");
+						bool isSameTeam = false;
+						if (hitEnergy.isRedTeam) {
+							if (m_energy.isRedTeam)
+								isSameTeam = true;
+							else
+								isSameTeam = false;
+						} else {
+							if (m_energy.isRedTeam)
+								isSameTeam = false;
+							else
+								isSameTeam = true;
+						}
+
+						//if target is sameteam
+						if (isSameTeam) {
+
+							// both of the the teammemeber have enough energy to trade more than the steal amount 
+							if (energySuckValue <= hitEnergy.currentEnergy && hitEnergy.currentEnergy <= hitEnergy.energyValue - energySuckValue && energySuckValue <= m_energy.currentEnergy && m_energy.currentEnergy <= m_energy.energyValue - energySuckValue) {
+								m_energy.TakenEnergy (-energySuckValue);
+								pv.RPC ("TakenEnergy", PhotonTargets.All, energySuckValue);
+							}
+						} else {
+							// if target is in different team and this player is in Red team
+							if (m_energy.isRedTeam) { // This is RedTeam
+
+								// if the target energy is lower than energy gona get sucked, and my Energy is not full
+								if (hitEnergy.currentEnergy <= energySuckValue) {// Enemy Energy has less energy than suck value
+									if (m_energy.currentEnergy < m_energy.energyValue - energySuckValue) {// my Energy is not going to full
+										float tempEnergy = energySuckValue - hitEnergy.currentEnergy; // how much energy the enemy lack from suck value
+										m_energy.TakenEnergy (-energySuckValue);
+										pv.RPC ("TakenEnergy", PhotonTargets.All, energySuckValue);
+										if (t_Energy.currentBlueTeamEnergy >= 0f) {//Blue Team Energy pool Have Energy
+											//t_Energy.ModifyBlueTeamEnergy (EnergyConsume * energySuckValue);//blue team minus
+											tE_PhotonView.RPC ("ModifyBlueTeamEnergy", PhotonTargets.All, tempEnergy * stealRationForTeam);
+										} 
+									} else {// my Energy is going to Full
+										float tempEnergy = energySuckValue - hitEnergy.currentEnergy;// energy Blue Team should Lose
+										float tempEnergy2 = energySuckValue + m_energy.currentEnergy - m_energy.energyValue;//energy RedTeamShould Added
+										m_energy.TakenEnergy (-energySuckValue);
+										pv.RPC ("TakenEnergy", PhotonTargets.All, energySuckValue);
+										//t_Energy.ModifyRedTeamEnergy (-EnergyConsume * energySuckValue);//red team add
+										tE_PhotonView.RPC ("ModifyRedTeamEnergy", PhotonTargets.All, -tempEnergy2 * stealRationForTeam);
+										if (t_Energy.currentBlueTeamEnergy >= 0) {//Blue Team Energy pool Have Energy
+											//t_Energy.ModifyBlueTeamEnergy (EnergyConsume * energySuckValue);//blue team minus
+											tE_PhotonView.RPC ("ModifyBlueTeamEnergy", PhotonTargets.All, tempEnergy * stealRationForTeam); 
+										}
+									}
+								} else {// Enemy have more energy than suck value
+									if (m_energy.currentEnergy < m_energy.energyValue - energySuckValue) {// my Energy is not going to full
+										m_energy.TakenEnergy (-energySuckValue);
+										pv.RPC ("TakenEnergy", PhotonTargets.All, energySuckValue);
+									} else {// my Energy is going to Full
+										float tempEnergy = energySuckValue + m_energy.currentEnergy - m_energy.energyValue;//energy RedTeamShould Added
+										m_energy.TakenEnergy (-energySuckValue);
+										pv.RPC ("TakenEnergy", PhotonTargets.All, energySuckValue);
+										//t_Energy.ModifyRedTeamEnergy (-EnergyConsume * energySuckValue);//red team add
+										tE_PhotonView.RPC ("ModifyRedTeamEnergy", PhotonTargets.All, -tempEnergy * stealRationForTeam);
+									}
+								}
+							} else {//Blue Team
+
+								// if the target energy is lower than energy gona get sucked, and my Energy is not full
+								if (hitEnergy.currentEnergy <= energySuckValue) {// Enemy Energy has less energy than suck value
+									if (m_energy.currentEnergy < m_energy.energyValue - energySuckValue) {// my Energy is not going to full
+										float tempEnergy = energySuckValue - hitEnergy.currentEnergy; // how much energy the enemy lack from suck value
+										m_energy.TakenEnergy (-energySuckValue);
+										pv.RPC ("TakenEnergy", PhotonTargets.All, energySuckValue);
+										if (t_Energy.currentRedTeamEnergy >= 0f) {//red Team Energy pool Have Energy
+
+											tE_PhotonView.RPC ("ModifyRedTeamEnergy", PhotonTargets.All, tempEnergy * stealRationForTeam);//red team minus
+										} 
+									} else {// my Energy is going to Full
+										float tempEnergy = energySuckValue - hitEnergy.currentEnergy;// energy Blue Team should Lose
+										float tempEnergy2 = energySuckValue + m_energy.currentEnergy - m_energy.energyValue;//energy RedTeamShould Added
+										m_energy.TakenEnergy (-energySuckValue);
+										pv.RPC ("TakenEnergy", PhotonTargets.All, energySuckValue);
+										tE_PhotonView.RPC ("ModifyBlueTeamEnergy", PhotonTargets.All, -tempEnergy2 * stealRationForTeam);//blue team add
+										if (t_Energy.currentRedTeamEnergy >= 0) {//red Team Energy pool Have Energy
+											tE_PhotonView.RPC ("ModifyRedTeamEnergy", PhotonTargets.All, tempEnergy * stealRationForTeam); //red team minus
+										}
+									}
+								} else {// Enemy have more energy than suck value
+									if (m_energy.currentEnergy < m_energy.energyValue - energySuckValue) {// my Energy is not going to full
+										m_energy.TakenEnergy (-energySuckValue);
+										pv.RPC ("TakenEnergy", PhotonTargets.All, energySuckValue);
+									} else {// my Energy is going to Full
+										float tempEnergy = energySuckValue + m_energy.currentEnergy - m_energy.energyValue;//energy RedTeamShould Added
+										m_energy.TakenEnergy (-energySuckValue);
+										pv.RPC ("TakenEnergy", PhotonTargets.All, energySuckValue);
+										//Blue team add
+										tE_PhotonView.RPC ("ModifyBlueTeamEnergy", PhotonTargets.All, -tempEnergy * stealRationForTeam);
+									}
+								}
+
+							}
+						}
+
+						}
 
 				} else if (hit.tag == "Ball") {
 					Vector3 tempVel = transform.forward * PushAddSpeed;
 					ball_PV.RPC ("AddVelocity", PhotonTargets.All, tempVel);
-					m_energy.TakenEnergy (EnergyConsume*energySuckSpeed);
+					m_energy.TakenEnergy (EnergyConsume*energyConsumeOnPushing);
 				}
 			}
-			float tempDist =1000f;
-			if (pre_Connected != null) {
-				tempDist = Vector3.Distance (pre_Connected.transform.position, transform.position);
-			}
-			if (tempDist <= boundTreshHold) {//insidebound will continuous suck energy
-				if (hitEnergy != null) {
-					bool isSameTeam = hitEnergy.isRedTeam && m_energy.isRedTeam;
-					//if target is sameteam
-					if (isSameTeam) {
-						// both of the the teammemeber have enough energy to trade
-						if (2 <= hitEnergy.currentEnergy && hitEnergy.currentEnergy <= hitEnergy.energyValue && 2 <= m_energy.currentEnergy && m_energy.currentEnergy <= m_energy.energyValue) {
-							m_energy.TakenEnergy (-EnergyConsume * energySuckSpeed);
-							pv.RPC ("TakenEnergy", PhotonTargets.All, EnergyConsume*8f* energySuckSpeed);
-						}
-					} else {
-						// if target is in different team and this player is in Red team
-						if (m_energy.isRedTeam) { 
-							// if the target energy is lower than 1, and my Energy is not full
-							if (hitEnergy.currentEnergy <= 1) {
-								if (m_energy.currentEnergy >= (hitEnergy.energyValue - 1f)) {// my Energy is Full
-									if (t_Energy.currentBlueTeamEnergy >= 0) {//Blue Team Energy pool Have Energy
-										//t_Energy.ModifyRedTeamEnergy (-EnergyConsume * energySuckSpeed);//red team add
-										tE_PhotonView.RPC ("ModifyRedTeamEnergy", PhotonTargets.All, -EnergyConsume * energySuckSpeed);
-										//t_Energy.ModifyBlueTeamEnergy (EnergyConsume * energySuckSpeed);//blue team minus
-										tE_PhotonView.RPC ("ModifyBlueTeamEnergy", PhotonTargets.All, EnergyConsume * energySuckSpeed);
-									}
-								}
-							} else if (hitEnergy.currentEnergy > 1 && hitEnergy.currentEnergy <= hitEnergy.energyValue) {
-								// target Have Energy
-								if (m_energy.currentEnergy >= (hitEnergy.energyValue - 1f)) {// my Energy is Full
-									//t_Energy.ModifyRedTeamEnergy (-EnergyConsume * energySuckSpeed);//red team add
-									tE_PhotonView.RPC ("ModifyRedTeamEnergy", PhotonTargets.All, -EnergyConsume * energySuckSpeed);
-									pv.RPC ("TakenEnergy", PhotonTargets.All, EnergyConsume * energySuckSpeed * 2f);//target miss energy
-								} else {
-									m_energy.TakenEnergy (-EnergyConsume * energySuckSpeed);
-									pv.RPC ("TakenEnergy", PhotonTargets.All, EnergyConsume * energySuckSpeed * 2f);//target miss energy
-								}
-							}
-						} else {//Blue Team
-							// if the target energy is lower than 1, and my Energy is not full
-							if (hitEnergy.currentEnergy <= 1) {
-								if (m_energy.currentEnergy >= (hitEnergy.energyValue - 1f)) {// my Energy is Full
-									if (t_Energy.currentRedTeamEnergy >= 0) {//Red Team Energy pool Have Energy
-										//t_Energy.ModifyBlueTeamEnergy (-EnergyConsume * energySuckSpeed);//Blue team add
-										tE_PhotonView.RPC ("ModifyBlueTeamEnergy", PhotonTargets.All, -EnergyConsume * energySuckSpeed);
-										//t_Energy.ModifyRedTeamEnergy (EnergyConsume * energySuckSpeed);//Red team minus
-										tE_PhotonView.RPC ("ModifyRedTeamEnergy", PhotonTargets.All, EnergyConsume * energySuckSpeed);
-									}
-								}
-							} else if (hitEnergy.currentEnergy > 1 && hitEnergy.currentEnergy <= hitEnergy.energyValue) {
-								// target Have Energy
-								if (m_energy.currentEnergy >= (hitEnergy.energyValue - 1f)) {// my Energy is Full
-									//t_Energy.ModifyBlueTeamEnergy (-EnergyConsume * energySuckSpeed);//Blue team add
-									tE_PhotonView.RPC ("ModifyBlueTeamEnergy", PhotonTargets.All, -EnergyConsume * energySuckSpeed);
-									pv.RPC ("TakenEnergy", PhotonTargets.All, EnergyConsume * energySuckSpeed * 2f);//target miss energy
-								} else {
-									m_energy.TakenEnergy (-EnergyConsume * energySuckSpeed);
-									pv.RPC ("TakenEnergy", PhotonTargets.All, EnergyConsume * energySuckSpeed * 2f);//target miss energy
-								}
-							}
 
-						}
-					}
-
-				} else {//break the bound
-					Debug.Log("BreakBound");
-					pre_Connected =null;
-					hitEnergy = null;
-					pv = null;
-
-				}
-			}
 		}
 	}
 

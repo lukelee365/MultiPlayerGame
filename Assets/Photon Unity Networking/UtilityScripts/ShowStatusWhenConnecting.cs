@@ -5,15 +5,20 @@ public class ShowStatusWhenConnecting : MonoBehaviour
 {
     public GUISkin Skin;
 
+	void Awake(){
+		
+	}
+
     void OnGUI()
     {
+		
         if( Skin != null )
         {
             GUI.skin = Skin;
         }
 
         float width = 400;
-        float height = 100;
+        float height = 200;
 
         Rect centeredRect = new Rect( ( Screen.width - width ) / 2, ( Screen.height - height ) / 2, width, height );
 
@@ -26,7 +31,9 @@ public class ShowStatusWhenConnecting : MonoBehaviour
 
         if( PhotonNetwork.inRoom )
         {
+			
             enabled = false;
+
         }
     }
 

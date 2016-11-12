@@ -10,6 +10,7 @@ public class DemoRPGMovement : MonoBehaviour
 	public Transform spawnPositionBall;
 	public float PositionOffset = 2.0f;
 	public GameObject inputButton;
+
     public GameObject control;
     void OnJoinedRoom()
     {

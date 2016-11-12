@@ -67,6 +67,6 @@ public class Timer : MonoBehaviour
         GUI.skin.button.alignment = TextAnchor.MiddleCenter;
 
         // GUI.Box(new Rect(Screen.width / 2 - ((Screen.width / 2) / 2), 0, Screen.width / 2, 50), text);
-        GUI.Box(new Rect(0, 0, 60, 25), text);
+		GUI.Box(new Rect(Screen.width / 2-15f, 10, 60, 25), text);
     }
 }

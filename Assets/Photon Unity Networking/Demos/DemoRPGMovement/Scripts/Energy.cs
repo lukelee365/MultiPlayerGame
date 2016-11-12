@@ -5,12 +5,14 @@ public class Energy : Photon.MonoBehaviour {
 	public float energyValue = 100f;
 	public Transform backPack;
 	public float  currentEnergy;
+	public float energyThreshHold;
 	float backPackScaleY;
 	private RPGMovement moveScript;
 	public bool isRedTeam;
 	public TextMesh textMesh_PlayerName;
 	private bool redColor;
 	private string playerName;
+
 	// Use this for initialization
 	void Start () {
 		currentEnergy = energyValue;
@@ -40,6 +42,7 @@ public class Energy : Photon.MonoBehaviour {
 		// 0 - 100 just do whatever
 		if (currentEnergy > 1f && currentEnergy <= energyValue) {
 			currentEnergy -= amt;
+			if(currentEnergy >=energyThreshHold)
 			moveScript.EnableControl(true); 
 		} else if (currentEnergy > energyValue) {//Energy Greater than 100
 			currentEnergy = energyValue;

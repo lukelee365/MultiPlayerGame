@@ -6,7 +6,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{CA944C3B-285D-5D54-A00A-BFB39C719F09}</ProjectGuid>
+    <ProjectGuid>{92073F6F-442E-278C-628D-6F4779E2A55B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp-firstpass</AssemblyName>
@@ -65,10 +65,10 @@
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>
  </Reference>
  <Reference Include="Photon3Unity3D">
- <HintPath>/Users/li_lu/Documents/Unity Project/MultiPlayerGame_WithoutNaming/Assets/Plugins/Photon3Unity3D.dll</HintPath>
+ <HintPath>/Users/li_lu/Desktop/Git/MultiPlayerGame/Assets/Plugins/Photon3Unity3D.dll</HintPath>
  </Reference>
  <Reference Include="websocket-sharp">
- <HintPath>/Users/li_lu/Documents/Unity Project/MultiPlayerGame_WithoutNaming/Assets/Plugins/WebSocket/websocket-sharp.dll</HintPath>
+ <HintPath>/Users/li_lu/Desktop/Git/MultiPlayerGame/Assets/Plugins/WebSocket/websocket-sharp.dll</HintPath>
  </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
