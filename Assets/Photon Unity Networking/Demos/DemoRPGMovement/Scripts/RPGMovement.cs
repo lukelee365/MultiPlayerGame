@@ -20,6 +20,11 @@ public class RPGMovement : MonoBehaviour
 	//public float attackUpModifer;
 	public float energySuckValue;
 	public float energyStealTimer;
+	//Visual Feed back
+	public ParticleSystem attackParticle;
+	public ParticleSystem attackBallParticle;
+	public ParticleSystem lossEnergy;
+    //// end of visual
 	private float energyConsumeOnPushing= 8f;
 	[HideInInspector]
 	public bool anotherMovementControlForButton;
@@ -27,6 +32,7 @@ public class RPGMovement : MonoBehaviour
 	private TeamEnergy t_Energy;
 	private Energy hitEnergy;
 	private PhotonView pv;
+	private float minRefillRatio;
     CharacterController m_CharacterController;
     Vector3 m_LastPosition;
     Animator m_Animator;
@@ -61,6 +67,7 @@ public class RPGMovement : MonoBehaviour
 		}
 		ball = GameObject.FindGameObjectWithTag ("Ball");
 		ball_PV = GameObject.FindGameObjectWithTag("Ball").GetComponent<PhotonView> ();
+		minRefillRatio = 1.3f; // means 0.3f
 	}
 
     void Update()
@@ -90,6 +97,7 @@ public class RPGMovement : MonoBehaviour
     }
 
 
+
     void UpdateAnimation()
     {
         Vector3 movementVector = transform.position - m_LastPosition;
@@ -110,7 +118,9 @@ public class RPGMovement : MonoBehaviour
 		{
 			speed = 0f;
 			//Stand Still Refill Energy
-			m_energy.TakenEnergy(-EnergyConsume*EnergyRefillMutlifier);
+		
+			float temp = ((m_energy.energyValue*minRefillRatio-m_energy.currentEnergy)/ m_energy.energyValue)*EnergyRefillMutlifier;//Energy Refill;
+			m_energy.TakenEnergy(-EnergyConsume*temp);
 //			Debug.Log ("RefillEnergy");
 			//m_PhotonView.RPC("TakenEnergy",PhotonTargets.All,-EnergyConsume);
 		}
@@ -207,12 +217,12 @@ public class RPGMovement : MonoBehaviour
 
     void UpdateStrafeMovement()
     {
+		float temp = ((m_energy.energyValue*minRefillRatio-m_energy.currentEnergy)/ m_energy.energyValue)*EnergyRefillMutlifier;//Energy Refill;
+
 		if( Input.GetKey( KeyCode.A ) == true|| Input.GetAxisRaw("Horizontal") < -0.1f )
 		{
-
-            CancelInvoke();
-
-			m_energy.TakenEnergy(EnergyConsume+EnergyConsume*EnergyRefillMutlifier);
+		    CancelInvoke();
+			m_energy.TakenEnergy(EnergyConsume+EnergyConsume*temp);
            // print("Energy1:" + m_energy);
             //m_PhotonView.RPC ("TakenEnergy",PhotonTargets.All,EnergyConsume);
             m_CurrentMovement = -transform.right * StrafeSpeed;
@@ -221,8 +231,7 @@ public class RPGMovement : MonoBehaviour
 		if( Input.GetKey( KeyCode.D ) == true|| Input.GetAxisRaw("Horizontal") > 0.1f  )
 		{
 			CancelInvoke();
-
-			m_energy.TakenEnergy(EnergyConsume+EnergyConsume*EnergyRefillMutlifier);
+			m_energy.TakenEnergy(EnergyConsume+EnergyConsume*temp);
 			//m_PhotonView.RPC ("TakenEnergy",PhotonTargets.All,EnergyConsume);
             m_CurrentMovement = transform.right * StrafeSpeed;
         }
@@ -251,6 +260,7 @@ public class RPGMovement : MonoBehaviour
 	//Suck Energy is 3 times faster of Energy Consume 
 	void Attack(){
 		if (Input.GetButton ("Fire1")) {
+			m_PhotonView.RPC ("AttackVisualFeedBack", PhotonTargets.All,1f);
 			//Vector3 explosionPos = transform.position+Vector3.forward*forwardOffset;
 			Collider[] colliders = Physics.OverlapSphere (attackTrans.position, attackRadius);
 			foreach (Collider hit in colliders) {
@@ -261,7 +271,7 @@ public class RPGMovement : MonoBehaviour
 						if (Time.time >= timeToSteal) {
 							//can attack now
 							timeToSteal = Time.time + energyStealTimer;
-						Debug.Log ("attack");
+						//Debug.Log ("attack");
 						bool isSameTeam = false;
 						if (hitEnergy.isRedTeam) {
 							if (m_energy.isRedTeam)
@@ -282,8 +292,10 @@ public class RPGMovement : MonoBehaviour
 							if (energySuckValue <= hitEnergy.currentEnergy && hitEnergy.currentEnergy <= hitEnergy.energyValue - energySuckValue && energySuckValue <= m_energy.currentEnergy && m_energy.currentEnergy <= m_energy.energyValue - energySuckValue) {
 								m_energy.TakenEnergy (-energySuckValue);
 								pv.RPC ("TakenEnergy", PhotonTargets.All, energySuckValue);
+								m_PhotonView.RPC ("SuckGreenEnergyVisualFeedBack", PhotonTargets.All,1f);
 							}
 						} else {
+							m_PhotonView.RPC ("SuckGreenEnergyVisualFeedBack", PhotonTargets.All,1f); // suck Energy Visual FeedBack
 							// if target is in different team and this player is in Red team
 							if (m_energy.isRedTeam) { // This is RedTeam
 
@@ -313,6 +325,7 @@ public class RPGMovement : MonoBehaviour
 									if (m_energy.currentEnergy < m_energy.energyValue - energySuckValue) {// my Energy is not going to full
 										m_energy.TakenEnergy (-energySuckValue);
 										pv.RPC ("TakenEnergy", PhotonTargets.All, energySuckValue);
+
 									} else {// my Energy is going to Full
 										float tempEnergy = energySuckValue + m_energy.currentEnergy - m_energy.energyValue;//energy RedTeamShould Added
 										m_energy.TakenEnergy (-energySuckValue);
@@ -365,6 +378,8 @@ public class RPGMovement : MonoBehaviour
 					Vector3 tempVel = transform.forward * PushAddSpeed;
 					ball_PV.RPC ("AddVelocity", PhotonTargets.All, tempVel);
 					m_energy.TakenEnergy (EnergyConsume*energyConsumeOnPushing);
+					attackBallParticle.Play ();
+					m_PhotonView.RPC ("AttackBallVisualFeedBack", PhotonTargets.All,1f);
 				}
 			}
 
@@ -374,6 +389,17 @@ public class RPGMovement : MonoBehaviour
 	public void EnableControl(bool b){
 		enableControll = b;
 	}
-
+	[PunRPC]
+	public void AttackVisualFeedBack(float t){
+		attackParticle.Play ();
+	}
+	[PunRPC]
+	public void AttackBallVisualFeedBack(float t){
+		attackBallParticle.Play ();
+	}
+	[PunRPC]
+	public void SuckGreenEnergyVisualFeedBack(float t){
+		lossEnergy.Play ();
+	}
 		
 }

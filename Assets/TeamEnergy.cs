@@ -40,7 +40,6 @@ public class TeamEnergy : MonoBehaviour {
         noWinAndLoseUI.SetActive(false);
 		redScaleY = redScore.transform.localScale.y;
 		blueScaleY = blueScore.transform.localScale.y;
-        print("Player" + player);
         //energy = player.GetComponent<Energy>();
     }
 	
@@ -50,6 +49,7 @@ public class TeamEnergy : MonoBehaviour {
 		blueScore.transform.localScale = new Vector3 (blueScore.transform.localScale.x, blueScaleY * currentBlueTeamEnergy / blueTeamEnergyValue, blueScore.transform.localScale.z);
         ViewWinLoseConditions();
     }
+
 
 	[PunRPC]
 	public void ModifyRedTeamEnergy(float amt){
@@ -89,29 +89,16 @@ public class TeamEnergy : MonoBehaviour {
 
             //if (energy.isRedTeam == true)
             //{
-                if (currentRedTeamEnergy >= 150)
+                if (currentRedTeamEnergy >= redTeamEnergyValue)
                 {
                     redTeamWinUI.SetActive(true);
                 }
 
-                if (currentBlueTeamEnergy >= 150)
+                if (currentBlueTeamEnergy >= blueTeamEnergyValue)
                 {
                     redTeamLoseUI.SetActive(true);
                 }
-            //}
-
-            /*if (energy.isRedTeam == false)
-            {
-                if (currentRedTeamEnergy >= 150)
-                {
-                    blueTeamLoseUI.SetActive(true);
-                }
-
-                if (currentBlueTeamEnergy >= 150)
-                {
-                    blueTeamWinUI.SetActive(true);
-                }
-            } */
+            
 
     }
 

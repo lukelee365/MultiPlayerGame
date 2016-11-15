@@ -25,7 +25,9 @@ public class DisablePlayerMovement : MonoBehaviour {
 
     public void PlayerCanMoveNow(){
 		//enable the movement
+		Cursor.visible = false;
 		playerRPG.anotherMovementControlForButton = true;
+
 	}
 
 }

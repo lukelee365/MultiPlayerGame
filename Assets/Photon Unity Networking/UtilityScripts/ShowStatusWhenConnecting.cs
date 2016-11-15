@@ -17,8 +17,8 @@ public class ShowStatusWhenConnecting : MonoBehaviour
             GUI.skin = Skin;
         }
 
-        float width = 400;
-        float height = 200;
+		float width = Screen.width/3+10f;
+		float height = Screen.height/3;
 
         Rect centeredRect = new Rect( ( Screen.width - width ) / 2, ( Screen.height - height ) / 2, width, height );
 
