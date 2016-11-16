@@ -8,8 +8,12 @@ public class RedGate : MonoBehaviour {
 	public float energyToBeAdded;
 	public Transform ballResapwnPoint;
 	private PhotonView tE_PhotonView;
-	// Use this for initialization
-	void Start () {
+    public ParticleSystem redGateGoal;
+    public ParticleSystem blueGateGoal;
+    PhotonView m_PhotonView;
+
+    // Use this for initialization
+    void Start () {
 		tEnergy = GameObject.FindGameObjectWithTag ("Manager").GetComponent<TeamEnergy> ();
 		tE_PhotonView = tEnergy.GetComponent<PhotonView> ();
 		something.SetActive (false);
@@ -24,11 +28,15 @@ public class RedGate : MonoBehaviour {
 		if (tEnergy != null&&other.tag == "Ball") {
 			if (isRedGate) {//Score Red gate
 				tEnergy.ModifyBlueTeamEnergy (-energyToBeAdded);
-				//tE_PhotonView.RPC ("ModifyBlueTeamEnergy", PhotonTargets.All, -energyToBeAdded);
-			} else {//Score Blue Gate
+                m_PhotonView.RPC("RedGateGoal", PhotonTargets.All, 1f);
+
+                //tE_PhotonView.RPC ("ModifyBlueTeamEnergy", PhotonTargets.All, -energyToBeAdded);
+            } else {//Score Blue Gate
 				tEnergy.ModifyRedTeamEnergy (-energyToBeAdded);
-				//tE_PhotonView.RPC ("ModifyRedTeamEnergy", PhotonTargets.All, -energyToBeAdded);
-			}
+                m_PhotonView.RPC("BlueGateGoal", PhotonTargets.All, 1f);
+
+                //tE_PhotonView.RPC ("ModifyRedTeamEnergy", PhotonTargets.All, -energyToBeAdded);
+            }
 			//set ball back to original postion
 			other.gameObject.transform.position = ballResapwnPoint.position;
 			//indicator happens
@@ -42,4 +50,17 @@ public class RedGate : MonoBehaviour {
 	void SomethingDisableAgain(){
 		something.SetActive (false);
 	}
+
+    [PunRPC]
+    public void RedGateGoal(float t)
+    {
+        redGateGoal.Play();
+    }
+
+    [PunRPC]
+    public void BlueGateGoal(float t)
+    {
+        blueGateGoal.Play();
+    }
+
 }
