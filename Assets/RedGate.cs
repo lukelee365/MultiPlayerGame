@@ -10,7 +10,7 @@ public class RedGate : MonoBehaviour {
 	private PhotonView tE_PhotonView;
     public ParticleSystem redGateGoal;
     public ParticleSystem blueGateGoal;
-    PhotonView m_PhotonView;
+    //PhotonView m_PhotonView;
 
     // Use this for initialization
     void Start () {
@@ -28,12 +28,12 @@ public class RedGate : MonoBehaviour {
 		if (tEnergy != null&&other.tag == "Ball") {
 			if (isRedGate) {//Score Red gate
 				tEnergy.ModifyBlueTeamEnergy (-energyToBeAdded);
-                m_PhotonView.RPC("RedGateGoal", PhotonTargets.All, 1f);
+                //tE_PhotonView.RPC("RedGateGoal", PhotonTargets.All, 1f);
 
                 //tE_PhotonView.RPC ("ModifyBlueTeamEnergy", PhotonTargets.All, -energyToBeAdded);
             } else {//Score Blue Gate
 				tEnergy.ModifyRedTeamEnergy (-energyToBeAdded);
-                m_PhotonView.RPC("BlueGateGoal", PhotonTargets.All, 1f);
+                //tE_PhotonView.RPC("BlueGateGoal", PhotonTargets.All, 1f);
 
                 //tE_PhotonView.RPC ("ModifyRedTeamEnergy", PhotonTargets.All, -energyToBeAdded);
             }

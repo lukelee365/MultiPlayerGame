@@ -244,6 +244,8 @@
     <None Include="Assets\Photon Unity Networking\changelog.txt" />
     <None Include="Assets\Photon Unity Networking\link.xml" />
     <None Include="Assets\Photon Unity Networking\readme.txt" />
+    <None Include="Assets\Plugins\Particle Ribbon\Plasma Ball\Plasma Ball - Readme.txt" />
+    <None Include="Assets\Plugins\Particle Ribbon\Plasma Ball\Shaders\Unluck Reflective Glass SDR.shader" />
     <None Include="Assets\Plugins\Particle Ribbon\readme_Simple_Particle_Ribbon.txt" />
     <None Include="Assets\Plugins\Photon3Unity3D.xml" />
     <None Include="Assets\Plugins\release_history.txt" />
